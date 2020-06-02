@@ -1,0 +1,115 @@
+---
+title: "PCA_Expl"
+author: "Niklas Schandry"
+date: "May / June 2020"
+output:
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+  html_document:
+    fig_caption: yes
+    fig_height: 9
+    fig_width: 16
+    highlight: haddock
+    theme: cosmo
+    toc: yes
+    toc_float: yes
+---
+
+```{r}
+library(tidyverse)
+library(magrittr)
+library(patchwork)
+```
+
+# Data in
+
+```{r}
+dist_mat <- readRDS("dat/distmat.rds")
+
+cent_mat <- readRDS("dat/centmat.rds")
+```
+
+
+```{r}
+p1 <- ggplot(dist_mat, aes(x = Sample1, y = Sample2)) +
+  geom_point()
+p2 <- ggplot(dist_mat, aes(x = Sample1, y = Sample3)) +
+  geom_point()
+p3 <- ggplot(dist_mat, aes(x = Sample1, y = Sample4)) +
+  geom_point()
+p4 <- ggplot(dist_mat, aes(x = Sample3, y = Sample4)) +
+  geom_point()
+p1+p2+p3+p4
+```
+```{r}
+p1 <- ggplot(dist_mat, aes(x = Sample1, y = rep(0,10))) +
+  geom_point() +theme_minimal() +
+   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.y = element_blank()) +
+  labs(y = element_blank())
+  
+
+p2 <- ggplot(dist_mat, aes(x = rep(0,10), y = Sample2 )) +
+  geom_point() +theme_minimal() +
+   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.x = element_blank()) +
+  labs(x = element_blank())
+p3 <- ggplot(dist_mat, aes(x = Sample1, y = Sample2)) +
+  geom_point() +
+  theme_minimal()
+p4 <- ggplot(dist_mat, aes(x = Sample3, y = Sample4)) +
+  geom_point()
+(p1+p2) / p3
+```
+
+
+A centered version of this matrix, where the axis are centered to their mean
+
+```{r}
+dist_mat[dist_mat == 0] <- NA
+cent_mat <- dist_mat %>% mutate(Sample1 = Sample1 - mean(Sample1, na.rm = T) %>% round(1),
+                   Sample2 = Sample2 - mean(Sample2, na.rm = T) %>% round(1),
+                   Sample3 = Sample3 - mean(Sample3, na.rm = T) %>% round(1),
+                   Sample4 = Sample4 - mean(Sample4, na.rm = T) %>% round(1))
+cent_mat[1,1] <- -mean(dist_mat[,1], na.rm = T)
+cent_mat[2,2] <- -mean(dist_mat[,2], na.rm = T)
+cent_mat[3,3] <- -mean(dist_mat[,3], na.rm = T)
+cent_mat[4,4] <- -mean(dist_mat[,4], na.rm = T)
+
+cent_mat <- cent_mat %>% round(1)
+```
+
+
+
+
+```{r}
+p_3_4_c <- ggplot(cent_mat, aes(x = Sample3, y = Sample4)) + geom_point() + theme_minimal()
+
+p_3_4_w_color_c <- ggplot(cent_mat, aes(x = Sample3, y = Sample4)) + geom_point(aes(color = Sample4)) + theme_minimal() + scale_colour_viridis_c()
+
+p_3_4_w_color_no_y_c <- ggplot(cent_mat, aes(x = Sample3, y = rep(0,10))) + 
+  geom_point(aes(color = Sample4)) +
+  theme_minimal() + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.y = element_blank()) +
+  scale_colour_viridis_c() + labs(y = element_blank())
+
+(p_3_4_c + p_3_4_w_color_c) / p_3_4_w_color_no_y_c
+```
+
+```{r}
+plotdat <- ggplot_build(p_3_4_w_color_no_y_c)
+colors <- plotdat$data[[1]] %$% colour
+```
+
+```{r}
+colors
+```
+
+```{r}
+pca_obj <- cent_mat %>% pcaMethods::pca(center = F) 
+pca_obj@scores %>%
+  as.data.frame() %>%
+  ggplot(aes(x = PC1, y =  PC2)) + 
+  geom_point(color = colors) +
+  theme_minimal()
+```

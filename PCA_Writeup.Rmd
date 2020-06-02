@@ -1,0 +1,109 @@
+---
+title: "Untitled"
+output: github_document
+---
+
+```{r, echo =  F, message = F}
+library(tidyverse)
+library(magrittr)
+library(patchwork)
+```
+
+# Data in
+
+```{r, echo = F}
+dist_mat <- readRDS("dat/distmat.rds")
+dist_mat[dist_mat == 0] <- NA
+cent_mat <- readRDS("dat/centmat.rds")
+```
+
+# About
+
+This is an explanation of how to imagine projections in high-dimensional space. Using blender we will discuss dimensions 1-3 and how to project them. We then continue to add a fourth. 
+
+# Distance matrices
+
+Here is a distance matrix, subset to a 4x10 matrix.
+
+```{r}
+dist_mat
+```
+
+In the specific case of distance matrices, each column is quite literally a dimension. Extending this thought, it might become intuitively clear why Sample1 has no value in the Sample1 dimension. Sample1 has no value simply because Sample1 is the dimension. This might be confusing, so here is a thought experiment: Imagine yourself as Individual1, the most egocentric person possible, everything only exists in relation to yourself and you only care about how far everything is away from you. You, yourself, do not have a distance to yourself, since you the center of this dimension. You are also unable to move yourself away from yourself, in the dimension centered on Individual1, you are the origin of the axis. 
+
+Another important aspect of a distance matrix, is understanding that each of the samples are orthogonal. What this means is simply, that the distance of a e.g. Sample3 in relation to Sample1 does not affect its position in Sample2.
+
+This is a bit confusing, but here is an example. 
+
+Note that I have replaced NA with 0 before plotting, to make the points show up.
+
+
+```{r, echo = F, eval = F}
+p1 <- ggplot(dist_mat, aes(x = Sample1, y = Sample2)) +
+  geom_point()
+p2 <- ggplot(dist_mat, aes(x = Sample1, y = Sample3)) +
+  geom_point()
+p3 <- ggplot(dist_mat, aes(x = Sample1, y = Sample4)) +
+  geom_point()
+p4 <- ggplot(dist_mat, aes(x = Sample3, y = Sample4)) +
+  geom_point()
+p1+p2+p3+p4
+```
+```{r}
+dist_mat[is.na(dist_mat)] <- 0
+p1 <- ggplot(dist_mat, aes(x = Sample1, y = rep(0,10))) +
+  geom_point() +theme_minimal() +
+   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.y = element_blank()) +
+  labs(y = element_blank())
+  
+
+p2 <- ggplot(dist_mat, aes(x = rep(0,10), y = Sample2 )) +
+  geom_point() +theme_minimal() +
+   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.x = element_blank()) +
+  labs(x = element_blank())
+p3 <- ggplot(dist_mat, aes(x = Sample1, y = Sample2)) +
+  geom_point() +
+  theme_minimal()
+p4 <- ggplot(dist_mat, aes(x = Sample3, y = Sample4)) +
+  geom_point()
+(p1+p2) / p3
+```
+
+The reason why orthogonal axis are a bit confusing is because we commonly assume all axis to be orthogonal. 
+
+To hammer home axis orthogonality, you can take a look at the blender file and play frames 0-50 for Sample1 (X), 50-95 for Sample2 (Y) and 100-145 for Sample3 (Z).
+
+To do a PCA on these three dimensions, we first center each dimension to its mean. Since e.g. Sample1 does not have a value in its own dimension, it also does not contribute to the mean. Imagine this: You have 2 Samples. Your distance between Sample1 and Sample2 is 5. The mean distance is 5, not (5 + 0) / 2, which would be 2.5. This gives all axis a common origin (the mean), thus assigning a value to the field that was previously NA. This matrix is no longer a distance matrix, but much nicer to visualize.
+
+A centered version of this matrix, where the axis are centered to their mean
+
+```{r}
+dist_mat[dist_mat == 0] <- NA
+cent_mat <- dist_mat %>% mutate(Sample1 = Sample1 - mean(Sample1, na.rm = T) %>% round(1),
+                   Sample2 = Sample2 - mean(Sample2, na.rm = T) %>% round(1),
+                   Sample3 = Sample3 - mean(Sample3, na.rm = T) %>% round(1),
+                   Sample4 = Sample4 - mean(Sample4, na.rm = T) %>% round(1))
+cent_mat[1,1] <- -mean(dist_mat[,1], na.rm = T)
+cent_mat[2,2] <- -mean(dist_mat[,2], na.rm = T)
+cent_mat[3,3] <- -mean(dist_mat[,3], na.rm = T)
+cent_mat[4,4] <- mean(dist_mat[,4], na.rm = T) # This was a typo, but makes the result much easier to understand.
+
+cent_mat <- cent_mat %>% round(1)
+```
+
+
+
+
+```{r}
+p_3_4_c <- ggplot(cent_mat, aes(x = Sample1, y = Sample4)) + geom_point() + theme_minimal()
+
+p_3_4_w_color_c <- ggplot(cent_mat, aes(x = Sample1, y = Sample4)) + geom_point(aes(color = Sample4)) + theme_minimal() + scale_colour_viridis_c()
+
+p_3_4_w_color_no_y_c <- ggplot(cent_mat, aes(x = Sample1, y = rep(0,10))) + 
+  geom_point(aes(color = Sample4)) +
+  theme_minimal() + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.y = element_blank()) +
+  scale_colour_viridis_c() + labs(y = element_blank())
+
+(p_3_4_c + p_3_4_w_color_c) / p_3_4_w_color_no_y_c
+```
