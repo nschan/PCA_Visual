@@ -170,7 +170,7 @@ colors
 In the blender, you will notice that there is a “collection” called
 sample colors
 
-\![](imgs/blender\_sample\_color\_collection.PNG)
+![](imgs/blender\_sample\_color\_collection.PNG)
 
 This is the same samples, but colored according to their value, you can
 display this by clicking on the eye-icon to make them visible.
@@ -185,7 +185,7 @@ variance as the distance between points) we are actually able to
 intuitively maximize these, the hardest part is gaining intuition for
 how the blender rotation works. This is my projection:
 
-\![](imgs/Second\_Projection.PNG)
+![](imgs/Second\_Projection.PNG)
 
 Again, we can compare this to the PCA result on these four columns.
 
