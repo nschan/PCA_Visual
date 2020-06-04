@@ -1,6 +1,7 @@
 ---
 title: "Untitled"
 output: github_document
+dev: cairo_pdf
 ---
 
 ```{r, echo =  F, message = F}
