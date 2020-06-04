@@ -200,6 +200,6 @@ pca_obj_1@scores %>%
 
 ![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
-Once we understand this, we can actually imagine even more dimension,
+Once we understand this, we can actually imagine even more dimensions,
 using common mappings e.g. shape, or transparency to add additional
 dimensions beyond the third.
