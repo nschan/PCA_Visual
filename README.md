@@ -1,7 +1,6 @@
 Visualizing more than 3 dimensions
 ================
 Niklas Schandry
-May / June 2020
 
 # Motivation
 
