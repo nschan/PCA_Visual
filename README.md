@@ -8,8 +8,7 @@ May / June 2020
 I am teaching a course on metagenomic analysis, with the core audience
 being molecular biologists. My goal is to explain data analysis that are
 commonly use for these multivariate datasets, and how to perform these
-using R. I am not intending to teach math, or pure stats, but
-data-science. Part of this is finding low-dimensional representations of
+using R. An important part of this is finding low-dimensional representations of
 a high-dimensional space, basically ordination.
 
 In my experience, two dimensional spaces are easy to grasp, and can be
@@ -17,8 +16,8 @@ visualized easily as an xy-plot. Some people are able to visualize a
 three dimensional space, but this can already be challenging for many
 datapoints.
 
-Literally everyone (myself included) is highly confused when trying to
-imagine a four-dimensional space, using axis that point, well, into
+Literally everyone i talked to (myself included) is highly confused when
+trying to imagine a four-dimensional space, using axis that point, well, into
 three dimensional space. It is not possible using another spacial
 dimension, because we cannot imagine more than three orthogonal spacial
 dimensions, and trying to do this is our first instinct, as we are
@@ -29,6 +28,16 @@ project additional dimensions onto a two-dimensional space, for example
 when we color dots by a categorial or continous variable. We can use the
 exact same principle, to add a fourth dimension to spheres in a
 three-dimensional space.
+
+To then perform ordination on this space we simply project it into two
+dimensions, taking into account the relative variance of the color-vector.
+
+This repository contains a blender scene, that is a direct representation
+of the dataset here and is set up in a way that enables an intuitive projection.
+
+Blender is free and available at https://www.blender.org/
+
+# The data
 
 To explain, we generate a matrix with independent, and less independent
 dimensions, this matrix is centered.
@@ -63,6 +72,8 @@ cent_mat_2
     ## 8   -1.5  12.2   4.1  -1.1
     ## 9    2.0  -1.6   3.6 -10.5
     ## 10  47.2   9.5  27.6 -69.1
+
+## Variance
 
 We see that Dim1 has the largest variance of the first three (720.4),
 followed by Dim3 (393.7). However, Dim4 widely exceeds the variance of
@@ -111,6 +122,8 @@ rotate around the center in three dimensional space, observing the
 
 ![](imgs/Blender_scene_overview.PNG)
 
+# Projecting 3 dimensions into two
+
 If we try to mimick a principal component analysis, we rotate (click on
 the “empty” element and press R and then move around in the panels
 showing the coordinate system, pressing R twice allows for a more “free”
@@ -133,8 +146,11 @@ pca_obj_1@scores %>%
   theme_minimal()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- --> Now to
-understand how we can project a fourth dimension, that is orthogonal to
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+# Projecting 4 dimensions into two
+
+Now, to understand how we can project a fourth dimension, that is orthogonal to
 the other three, we simply map dimension 4 to a color vector. I have
 tried to explain this using the plots below, initially we map dim1 and
 dim4 in space, then we color the dots by their dim4 value, and then, we
@@ -175,8 +191,8 @@ sample colors
 This is the same samples, but colored according to their value, you can
 display this by clicking on the eye-icon to make them visible.
 
-We can now project their position in the fourth dimension as well. We
-also know (see above) that dimension four explains much more variance.
+We can now project their position in the fourth, color, dimension as well.
+We also know (see above) that dimension four explains much more variance.
 We now try to project dimension four (from yellow to purple) along the X
 axis in the camera view. Then, we rotate to maximize the distance along
 the other axis. Since we take into account variance of the color vector
