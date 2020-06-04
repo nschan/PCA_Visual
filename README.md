@@ -183,7 +183,7 @@ colors
     ## [10] "#440154"
 
 In blender, you will notice that there is a “collection” called
-sample colors
+Samples_Color
 
 ![](imgs/blender\_sample\_color\_collection.PNG)
 
