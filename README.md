@@ -109,7 +109,7 @@ light follow the rotation of this element. This allows us to freely
 rotate around the center in three dimensional space, observing the
 “projection” in the camera panel on the lower right.
 
-\!(imgs/Blender\_scene\_overview.PNG)
+![](imgs/Blender_scene_overview.PNG)
 
 If we try to mimick a principal component analysis, we rotate (click on
 the “empty” element and press R and then move around in the panels
@@ -120,7 +120,7 @@ distance along the other axis. It is not hard to find a projection that
 approximates the output of a PCA pretty well, once we get a feel for how
 rotation works in blender. This is me playing a bit in blender:
 
-\!(imgs/First\_projection.PNG)
+![](imgs/First_projection.PNG)
 
 This is the PCA result:
 
@@ -142,45 +142,16 @@ remove the axis that was used for dim4, retaining information about both
 dimensions in a one-dimensional display.
 
 ``` r
-p1_4 <- ggplot(cent_mat_2, aes(x = Dim1, y = Dim4)) +
-  geom_point() +
-  theme_minimal()
+(p1_4 + p1_4_color) + p1_4_color_no_y
 ```
 
-``` r
-p1_4_color_no_y <- ggplot(cent_mat_2) + 
-  geom_point(aes(x = Dim1, y = rep(0,10), color = Dim4)) +
-  theme_minimal() + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.y = element_blank()) +
-  labs(y = element_blank()) +
-  scale_color_viridis_c() 
-```
-
-``` r
-p1_4_color <- cent_mat_2 %>%
-  ggplot(aes(x = Dim1, y = Dim4)) +
-  geom_point(aes(color = Dim4)) +
-  theme_minimal() +
-  scale_color_viridis_c() 
-```
-
-``` r
-p1_4
-```
-
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
-
-``` r
-p1_4_color
-```
-
-![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
 p1_4_color_no_y
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 I extract these colors.
 
@@ -227,7 +198,7 @@ pca_obj_1@scores %>%
   theme_minimal()
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 Once we understand this, we can actually imagine even more dimension,
 using common mappings e.g. shape, or transparency to add additional
