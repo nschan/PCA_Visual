@@ -182,7 +182,7 @@ colors
     ##  [1] "#404988" "#8CD44D" "#FDE725" "#2B9289" "#3F5089" "#3A608B" "#2CAA82" "#2B7E8D" "#31708D"
     ## [10] "#440154"
 
-In the blender, you will notice that there is a “collection” called
+In blender, you will notice that there is a “collection” called
 sample colors
 
 ![](imgs/blender\_sample\_color\_collection.PNG)
