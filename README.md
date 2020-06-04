@@ -39,7 +39,7 @@ Blender is free and available at https://www.blender.org/
 # The data
 
 To explain, we generate a matrix with independent, and less independent
-dimensions, this matrix is centered.
+dimensions, all are centered.
 
 ``` r
 library(tidyverse)
